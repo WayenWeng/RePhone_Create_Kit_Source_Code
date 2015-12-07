@@ -231,20 +231,92 @@ void time_window_increase()
         } else {
             g_time_set.minute = 0;
         }
-    } else if (id == 7) {
+    }
+    else if(id == 7)
+    {
         g_time_set.year++;
-    } else if (id == 8) {
-        if (g_time_set.month < 12) {
+        if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+        {
+
+        }
+        else
+        {
+        	if(g_time_set.month == 2 && g_time_set.day == 29)
+        	g_time_set.day = 28;
+        }
+    }
+    else if (id == 8)
+    {
+        if(g_time_set.month < 12)
+        {
             g_time_set.month++;
-        } else {
+        }
+        else
+        {
             g_time_set.month = 1;
         }
-    } else if (id == 9) {
-        if (g_time_set.day < 31) {
-            g_time_set.day++;
-        } else {
-            g_time_set.day = 1;
+        if(g_time_set.month == 4 || g_time_set.month == 6 || g_time_set.month == 9 || g_time_set.month == 11)
+        {
+        	if(g_time_set.day == 31)
+        	g_time_set.day = 30;
         }
+        else if(g_time_set.month == 2)
+        {
+        	if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+        	g_time_set.day = 29;
+        	else
+        	g_time_set.day = 28;
+        }
+    }
+    else if (id == 9)
+    {
+    	if(g_time_set.month == 1 || g_time_set.month == 3 || g_time_set.month == 5 || g_time_set.month == 7 || g_time_set.month == 8 || g_time_set.month == 10 || g_time_set.month == 12)
+    	{
+			if(g_time_set.day < 31)
+			{
+				g_time_set.day++;
+			}
+			else
+			{
+				g_time_set.day = 1;
+			}
+    	}
+    	else if(g_time_set.month == 4 || g_time_set.month == 6 || g_time_set.month == 9 || g_time_set.month == 11)
+    	{
+			if(g_time_set.day < 30)
+			{
+				g_time_set.day++;
+			}
+			else
+			{
+				g_time_set.day = 1;
+			}
+    	}
+    	else
+    	{
+    		if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+    		{
+    			if(g_time_set.day < 29)
+    			{
+    				g_time_set.day++;
+    			}
+    			else
+    			{
+    				g_time_set.day = 1;
+    			}
+    		}
+    		else
+    		{
+    			if(g_time_set.day < 28)
+    			{
+    				g_time_set.day++;
+    			}
+    			else
+    			{
+    				g_time_set.day = 1;
+    			}
+    		}
+    	}
     }
 }
 
@@ -263,20 +335,92 @@ void time_window_descrease()
         } else {
             g_time_set.minute = 59;
         }
-    } else if (id == 7) {
+    }
+    else if (id == 7)
+    {
         g_time_set.year--;
-    } else if (id == 8) {
-        if (g_time_set.month > 1) {
+        if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+        {
+
+        }
+        else
+        {
+        	if(g_time_set.month == 2 && g_time_set.day == 29)
+        	g_time_set.day = 28;
+        }
+    }
+    else if(id == 8)
+    {
+        if(g_time_set.month > 1)
+        {
             g_time_set.month--;
-        } else {
+        }
+        else
+        {
             g_time_set.month = 12;
         }
-    } else if (id == 9) {
-        if (g_time_set.day > 1) {
-            g_time_set.day--;
-        } else {
-            g_time_set.day = 31;
-        }
+        if(g_time_set.month == 4 || g_time_set.month == 6 || g_time_set.month == 9 || g_time_set.month == 11)
+		{
+			if(g_time_set.day == 31)
+			g_time_set.day = 30;
+		}
+		else if(g_time_set.month == 2)
+		{
+			if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+			g_time_set.day = 29;
+			else
+			g_time_set.day = 28;
+		}
+    }
+    else if (id == 9)
+    {
+    	if(g_time_set.month == 1 || g_time_set.month == 3 || g_time_set.month == 5 || g_time_set.month == 7 || g_time_set.month == 8 || g_time_set.month == 10 || g_time_set.month == 12)
+    	{
+			if(g_time_set.day > 1)
+			{
+				g_time_set.day--;
+			}
+			else
+			{
+				g_time_set.day = 31;
+			}
+    	}
+    	else if(g_time_set.month == 4 || g_time_set.month == 6 || g_time_set.month == 9 || g_time_set.month == 11)
+    	{
+			if(g_time_set.day > 1)
+			{
+				g_time_set.day--;
+			}
+			else
+			{
+				g_time_set.day = 30;
+			}
+    	}
+    	else
+    	{
+    		if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
+    		{
+    			if(g_time_set.day > 1)
+    			{
+    				g_time_set.day--;
+    			}
+    			else
+    			{
+    				g_time_set.day = 29;
+    			}
+    		}
+    		else
+    		{
+    			if(g_time_set.day > 1)
+    			{
+    				g_time_set.day--;
+    			}
+    			else
+    			{
+    				g_time_set.day = 28;
+    			}
+    		}
+    	}
     }
 }
 

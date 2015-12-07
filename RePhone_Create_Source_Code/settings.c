@@ -29,10 +29,8 @@ int screen_suspend(void)
     if (g_screen_off_timeout > 0) {
         g_screen_off_timeout--;
         if (g_screen_off_timeout == 0) {
-            lcd_backlight_level(2);
-
+            lcd_backlight_level(0);
             vm_pwr_lcd_sleep_in();
-
         } else {
         	return 0;
         }
@@ -44,9 +42,7 @@ int screen_suspend(void)
 void screen_resume(void)
 {
     if (g_screen_off_timeout == 0) {
-
     	vm_pwr_lcd_sleep_out();
-
         lcd_backlight_level(g_brightness_table[g_settings_brightness]);
     }
     
