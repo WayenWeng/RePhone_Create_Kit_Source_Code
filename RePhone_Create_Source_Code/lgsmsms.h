@@ -9,7 +9,7 @@
 typedef struct
 {
     char number[42];
-    char content[100];
+    char content[151];
     int result;
 }sms_send_struct;
 

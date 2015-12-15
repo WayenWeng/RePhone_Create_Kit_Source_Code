@@ -4,7 +4,7 @@
 
 
 #define ADDRESS_MAX     20
-#define CONTENT_LEN_MAX     100
+#define CONTENT_LEN_MAX     151
 
 
 void sms_book_open();

@@ -13,7 +13,7 @@
 #include "vmchset.h"
 #include <stdlib.h>
 
-char g_system_time_string[17] = {'2', '0', '1', '5', '-', '0', '8', '-', '0', '1', '\n', '1', '2', ':', '0', '0', 0 };
+char g_system_time_string[17] = {'2', '0', '0', '4', '-', '0', '1', '-', '0', '1', '\n', '0', '0', ':', '0', '0', 0 };
 vm_date_time_t g_time_set;
 char g_time_set_string[5][5] = {0,};
 uint8_t g_time_set_focus = 4;
@@ -237,11 +237,12 @@ void time_window_increase()
         g_time_set.year++;
         if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
         {
-
+        	if(g_time_set.month == 2 && g_time_set.day > 29)
+        	g_time_set.day = 29;
         }
         else
         {
-        	if(g_time_set.month == 2 && g_time_set.day == 29)
+        	if(g_time_set.month == 2 && g_time_set.day > 28)
         	g_time_set.day = 28;
         }
     }
@@ -263,9 +264,10 @@ void time_window_increase()
         else if(g_time_set.month == 2)
         {
         	if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
-        	g_time_set.day = 29;
-        	else
-        	g_time_set.day = 28;
+			{
+				if(g_time_set.day > 29)g_time_set.day = 29;
+			}
+        	else if(g_time_set.day > 28)g_time_set.day = 28;
         }
     }
     else if (id == 9)
@@ -339,13 +341,16 @@ void time_window_descrease()
     else if (id == 7)
     {
         g_time_set.year--;
+        if(g_time_set.year < 2004)g_time_set.year = 2004;
+
         if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
         {
-
+        	if(g_time_set.month == 2 && g_time_set.day > 29)
+        	g_time_set.day = 29;
         }
         else
         {
-        	if(g_time_set.month == 2 && g_time_set.day == 29)
+        	if(g_time_set.month == 2 && g_time_set.day > 28)
         	g_time_set.day = 28;
         }
     }
@@ -367,9 +372,10 @@ void time_window_descrease()
 		else if(g_time_set.month == 2)
 		{
 			if((g_time_set.year % 400 == 0)||(g_time_set.year % 4 == 0)&&(g_time_set.year % 100 != 0))
-			g_time_set.day = 29;
-			else
-			g_time_set.day = 28;
+			{
+				if(g_time_set.day > 29)g_time_set.day = 29;
+			}
+			else if(g_time_set.day > 28)g_time_set.day = 28;
 		}
     }
     else if (id == 9)

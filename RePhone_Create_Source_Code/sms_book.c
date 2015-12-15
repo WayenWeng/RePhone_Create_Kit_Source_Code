@@ -59,7 +59,7 @@ void sms_book_add(char* content)
 		return;
 	}
 
-	char str_dbg[100];
+	char str_dbg[151];
 	int min = 0;
 	int max = item_num;
 
@@ -123,7 +123,7 @@ void sms_save()
 	file_delete("sms_book.txt");
 	file_open("sms_book.txt");
 
-	char str[100];
+	char str[151];
 	for(i=0;i<item_num;i++)
 	{
 		sprintf(str, "%s\r\n", sms_content[i]);

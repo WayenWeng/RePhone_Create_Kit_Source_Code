@@ -1061,5 +1061,5 @@ void ifttt_book_add(char *content)
 
 	ifttt_book_open();
 	ifttt_list_window_update();
-	//audioPlay(storageFlash, "bubble.mp3");
+	audioPlay(storageFlash, "bubble.mp3");
 }

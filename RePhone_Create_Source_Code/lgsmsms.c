@@ -19,7 +19,11 @@ void (*g_sms_send_message_cb)(int) = NULL;
 
 unsigned int msgIdMax = 0;        				     // max SMS id
 char  msgNumber[GSM_SMS_NUM_MAX][42] = {0};    // number data of current SMS
-char  msgContent[GSM_SMS_NUM_MAX][100] = {0};  // content data of current SMS
+char  msgContent[GSM_SMS_NUM_MAX][151] = {0};  // content data of current SMS
+
+#define MAX_CONTENT_BUFFER	451
+char content[MAX_CONTENT_BUFFER];
+
 
 void sms_inbox_open();
 void sms_inbox_save();
@@ -63,11 +67,11 @@ VMUINT8 gsm_sms_send(void* userdata)
 	strcpy(g_sms_send_data.content, to);
 
 	VMWCHAR number[42];
-    VMWCHAR content[100];
+    VMWCHAR content[151];
 
     VMUINT8 res;
 
-	vm_chset_ascii_to_ucs2(content, 100*2, g_sms_send_data.content);
+	vm_chset_ascii_to_ucs2(content, 151*2, g_sms_send_data.content);
 
 	vm_chset_ascii_to_ucs2(number, 42*2, g_sms_send_data.number);
 
@@ -90,7 +94,7 @@ VMUINT8 gsm_sms_send(void* userdata)
 void sms_read_callback(vm_gsm_sms_callback_t* callback_data)
 {
     static char phone_number[42];
-    static char content[100];
+    //static char content[301];
     vm_gsm_sms_read_message_data_callback_t* read_msg;
     VMINT8 *g_sms_number_buf = 0;
     VMINT8 *g_sms_content_buf = 0;
@@ -110,43 +114,47 @@ void sms_read_callback(vm_gsm_sms_callback_t* callback_data)
 
 				// assume dcs = UCS2
 				g_sms_content_buf = content;
-				vm_chset_ucs2_to_ascii((signed char *)g_sms_content_buf, 100, (VMWCHAR*)read_msg->message_data->content_buffer);
+				vm_chset_ucs2_to_ascii((signed char *)g_sms_content_buf, MAX_CONTENT_BUFFER, (VMWCHAR*)read_msg->message_data->content_buffer);
 
-				VMUINT8 i;
+				VMUINT16 i,j = 0;
+				VMUINT16 str_len;
+				VMUINT8 str_num;
 
-				msgIdMax ++;
-				if(msgIdMax >= GSM_SMS_NUM_MAX)msgIdMax = GSM_SMS_NUM_MAX;
+				str_len = strlen(g_sms_content_buf);
+				str_num = str_len / 151 + 1;
+				vm_log_info("str_len is %d", str_len);
+				vm_log_info("str_num is %d", str_num);
 
-				for(i=0;i<(GSM_SMS_NUM_MAX - 1);i++)
+				while(1)
 				{
-					strcpy(msgNumber[(GSM_SMS_NUM_MAX - 2 - i) + 1], msgNumber[(GSM_SMS_NUM_MAX - 2) - i]);
-					strcpy(msgContent[(GSM_SMS_NUM_MAX - 2 - i) + 1],msgContent[(GSM_SMS_NUM_MAX - 2) - i]);
+					msgIdMax ++;
+					if(msgIdMax >= GSM_SMS_NUM_MAX)msgIdMax = GSM_SMS_NUM_MAX;
+
+					for(i=0;i<(GSM_SMS_NUM_MAX - 1);i++)
+					{
+						strcpy(msgNumber[(GSM_SMS_NUM_MAX - 2 - i) + 1], msgNumber[(GSM_SMS_NUM_MAX - 2) - i]);
+						strcpy(msgContent[(GSM_SMS_NUM_MAX - 2 - i) + 1],msgContent[(GSM_SMS_NUM_MAX - 2) - i]);
+					}
+
+					strcpy(msgNumber[0], (char*)g_sms_number_buf);
+					if(j < (str_len - 1))
+					strncpy(msgContent[0], (char*)(g_sms_content_buf + j * 150), 150);
+					else
+					strncpy(msgContent[0], (char*)(g_sms_content_buf + j * 150), str_len - j * 150);
+
+					j ++;
+					if(j == str_num)break;
 				}
 
-				strcpy(msgNumber[0], (char*)g_sms_number_buf);
-				strcpy(msgContent[0], (char*)g_sms_content_buf);
-
-                vm_log_info("save  message");
+                vm_log_info("save message");
 				sms_inbox_save();
                 vm_log_info("saved");
 
                 if (g_sms_new_message_cb) {
                     g_sms_new_message_cb(g_sms_number_buf, g_sms_content_buf);
+                	//g_sms_new_message_cb(msgNumber[0], msgContent[0]);
                 }
                 vm_log_info("callback done");
-
-				/*
-				for(i=0;i<msgIdMax;i++)
-				{
-					vm_log_info("msgNumber %s", msgNumber[i]);
-					vm_log_info("msgContent %s", msgContent[i]);
-				}
-				*/
-
-				// Frees the memory allocated by the malloc()
-				// vm_free(read_msg->message_data->content_buffer);
-				// vm_free(read_msg->message_data);
-                // vm_log_info("free memory done");
 			}
         }
         else
@@ -304,7 +312,7 @@ void sms_inbox_open()
 
 	if(len > 2)
 	{
-		char str_tmp[GSM_SMS_NUM_MAX*(42+100+5)];
+		char str_tmp[GSM_SMS_NUM_MAX*(42+151+5)];
 		file_read("sms_inbox.txt", str_tmp, len, 0);
 
 		for(i=0; i<len; )
@@ -327,7 +335,7 @@ void sms_inbox_save()
 	file_delete("sms_inbox.txt");
 	file_open("sms_inbox.txt");
 
-	char str[150];
+	char str[151];
 	for(i=0;i<msgIdMax;i++)
 	{
 		sprintf(str, "%s,%s\r\n", msgNumber[i], msgContent[i]);
