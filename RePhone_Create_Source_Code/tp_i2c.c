@@ -5,7 +5,7 @@
 #include "vmdrv_tp.h"
 #include "vmdatetime.h"
 #include "vmthread.h"
-#include "TP_I2C.h"
+#include "tp_i2c.h"
 #include "vmdatetime.h"
 #include "string.h"
 
