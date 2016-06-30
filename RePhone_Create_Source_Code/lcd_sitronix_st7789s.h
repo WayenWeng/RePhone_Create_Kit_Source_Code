@@ -1,4 +1,6 @@
 
+#define _TOUCH_SCREEN_V1_0_
+//#define _TOUCH_SCREEN_V1_1_
 
 #define LCD_BASE                       (0xA0450000)
 #define LCD_INT_ENABLE_REG          (LCD_BASE+0x0004)
